@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-gist
+  labels:
+    app: github-gists
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: github-gists
+  template:
+    metadata:
+      labels:
+        app: github-gists
+    spec:
+      containers:
+      - name: dev-conatiner
+        image: 288761764400.dkr.ecr.ap-south-1.amazonaws.com/test-ecr:github-latest
+        ports:
+        - containerPort: 8080

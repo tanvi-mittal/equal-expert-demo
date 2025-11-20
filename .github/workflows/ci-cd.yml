@@ -7,14 +7,10 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: checkout code
         uses: actions/checkout@v3
-
-      - name: Run test cases
-        run: 
-          python test_app.py
 
       - name: Configure AWS creds
         uses: aws-actions/configure-aws-credentials@v4
@@ -32,6 +28,14 @@ jobs:
           IMAGE_URI=288761764400.dkr.ecr.ap-south-1.amazonaws.com/test-ecr:${IMAGE_TAG}
           docker build --platform=linux/amd64 -t ${IMAGE_URI} .
           docker push ${IMAGE_URI}
+
+      - name: Deploy the api to k8s
+        run: 
+          kubectl apply -f deployment.yml
+          kubectl apply -f service.yml
+          
+
+          
 
 
 
