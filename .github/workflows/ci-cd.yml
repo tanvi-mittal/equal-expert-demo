@@ -30,10 +30,10 @@ jobs:
           docker push ${IMAGE_URI}
 
       - name: Deploy the api to k8s
-        run: 
-          kubectl apply -f deployment.yml
-          kubectl apply -f service.yml
-          
+        run: |
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+
 
           
 
