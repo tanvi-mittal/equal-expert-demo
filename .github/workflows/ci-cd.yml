@@ -1,0 +1,35 @@
+name: deploy ci cd pipeline
+on:
+  workflow_dispatch:
+  push:
+   branches:
+     - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ap-south-1
+      
+      - name: Login into ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push the docker image
+        run: |
+          IMAGE_TAG=github-latest
+          IMAGE_URI=288761764400.dkr.ecr.ap-south-1.amazonaws.com/test-ecr:${IMAGE_TAG}
+          docker build --platform=linux/amd64 -t ${IMAGE_URI} .
+          docker push ${IMAGE_URI}
+
+
+
+
+  
